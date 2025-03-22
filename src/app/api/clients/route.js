@@ -1,17 +1,11 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
-
-// Conectar a PostgreSQL
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
+import { pool } from '../../../lib/db';//Conexión a la base de datos
 
 // 🔹 GET: Obtener todos los clientes
 export async function GET() {
   try {
     const result = await pool.query('SELECT * FROM clients ORDER BY id DESC');
-    return NextResponse.json(result.rows, { status: 200 });
+    return NextResponse.json(result.rows, { status: 200 }); //result.rows hacen que la respuesta venga en TDD Array
   } catch (error) {
     console.error('Error en GET:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

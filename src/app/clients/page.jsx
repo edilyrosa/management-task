@@ -62,8 +62,8 @@ export default function ClientsList() {
   };
 
   return (
-    <div>
-      <Button size='large' variant="contained" color="primary" onClick={() => openForm()} style={{ margin: '5px', marginLeft:'40%', width:'20%' }}>
+    <div className='flex flex-col items-center justify-center p-4'>
+      <Button size='large' variant="contained" color="primary" onClick={() => openForm()} style={{width:'50%' }}>
         Add Client
       </Button>
       <ClientTable clients={clients} isLoading={!data && !error} onEdit={openForm} onDelete={confirmDelete} />

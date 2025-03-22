@@ -120,13 +120,20 @@ export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
     return <p className="text-gray-600 text-center mt-4">No clients found.</p>;
   }
 
-  const filteredClients = clients.filter((client) =>
-    Object.values(client).some(
-      (value) =>
-        typeof value === 'string' &&
-        value.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
+  // const filteredClients = clients.filter((client) =>
+  //   Object.values(client).some(
+  //     (value) =>
+  //       typeof value === 'string' &&
+  //       value.toLowerCase().includes(searchQuery.toLowerCase())
+  //   )
+  // );
+
+  const filteredClients = clients.filter((client) => {
+    const statusText = client.active ? 'Active' : 'Inactive';
+  
+    return [client.name, statusText, client.industry_codes, client.city, client.country, client.state]
+      .some(value => String(value || '').toLowerCase().includes(searchQuery.toLowerCase()));
+  });
 
   return (
     <div className="p-5 w-full px-5 mx-auto relative">
@@ -145,8 +152,8 @@ export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3">Client's Name</th>
-              <th className="px-6 py-3">Industry Code</th>
-              <th className="px-6 py-3 hidden md:table-cell">Status</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3 hidden md:table-cell">Industry Code</th>
               <th className="px-6 py-3 hidden md:table-cell">City</th>
               <th className="px-6 py-3 hidden md:table-cell">Country</th>
               <th className="px-6 py-3 hidden lg:table-cell">State</th>
@@ -165,12 +172,13 @@ export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
                 onMouseLeave={() => setHoveredClient(null)}
               >
                 <td className="px-6 py-4">{client.name}</td>
-                <td className="px-6 py-4">{client.industry_codes}</td>
-                <td className="px-6 py-4 hidden md:table-cell">
+                <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded-md text-xs font-semibold ${client.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                     {client.active ? 'Active' : 'Inactive'}
                   </span>
                 </td>
+                <td className="px-6 py-4 hidden md:table-cell">{client.industry_codes}</td>
+                
                 <td className="px-6 py-4 hidden md:table-cell">{client.city}</td>
                 <td className="px-6 py-4 hidden md:table-cell">{client.country}</td>
                 <td className="px-6 py-4 hidden lg:table-cell">{client.state}</td>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { pool } from '../../../lib/db'; // Asegúrate de tener la conexión a la base de datos
+import { pool } from '../../../lib/db'; //Conexión a la base de datos
 
 // 📌 GET: Obtener todos los proyectos
 export async function GET() {
