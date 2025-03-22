@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 import ClientTable from './ClientTable';
 import ClientForm from './ClientForm';
-import DeleteConfirmModal from './DeleteConfirmModal';
+import DeleteConfirmModal from '../components/DeleteConfirmModal'; // ✅ Usamos el modal genérico
+
 
 const fetcher = async (url) => {
   const res = await fetch(url);
@@ -67,7 +68,7 @@ export default function ClientsList() {
       </Button>
       <ClientTable clients={clients} isLoading={!data && !error} onEdit={openForm} onDelete={confirmDelete} />
       <ClientForm open={isFormOpen} onClose={() => setIsFormOpen(false)} onSave={handleSave} clientData={editingClient} />
-      <DeleteConfirmModal open={Boolean(deleteClientId)} onClose={() => setDeleteClientId(null)} onConfirm={handleDelete} clientName={deleteClientName} />
+      <DeleteConfirmModal open={Boolean(deleteClientId)} onClose={() => setDeleteClientId(null)} onConfirm={handleDelete} itemName={deleteClientName} />
     </div>
   );
 }
