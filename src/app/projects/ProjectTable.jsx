@@ -45,14 +45,6 @@ export default function ProjectTable({ projects, onEdit, onDelete, isLoading }) 
     return <p className="text-gray-600 text-center mt-4">No projects found.</p>;
   }
 
-  // const filteredProjects = projects.filter((project) =>
-  //   Object.values(project).some(
-  //     (value) =>
-  //       typeof value === 'string' &&
-  //       value.toLowerCase().includes(searchQuery.toLowerCase())
-  //   )
-  // );
-
   const filteredProjects = projects.filter((project) => {
     const clientName = clientsMap[project.client_id] || 'Unknown';
     const statusText = project.active ? 'Active' : 'Inactive';
@@ -66,7 +58,7 @@ export default function ProjectTable({ projects, onEdit, onDelete, isLoading }) 
         <TextField fullWidth label="Search Projects" variant="outlined" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      <div className="w-full">
+      <div className="w-full overflow-x-auto">
         <table className="table w-full text-left text-gray-600 text-xs sm:text-sm">
           <thead className="bg-gray-100">
             <tr>
