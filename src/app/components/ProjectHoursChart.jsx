@@ -173,7 +173,7 @@ export default function ProjectHoursChart() {
   }, []);
 
   return (
-    <div className="bg-[#f8f9fa] w-full lg:w-[60%] h-[40vh] p-4 shadow-lg rounded-lg overflow-hidden flex flex-col justify-between">
+    <div className="bg-[#f8f9fa] w-full lg:w-[50%] h-[50vh] p-4 shadow-lg rounded-lg overflow-hidden flex flex-col justify-between">
       <h2 className="text-xl font-bold text-center mb-3">Hours Worked by Project</h2>
 
       {loading 
@@ -210,12 +210,14 @@ export default function ProjectHoursChart() {
         <p className="text-center text-gray-500">No data available</p>
       )}
 
-      <div className="flex flex-col items-center justify-center p-3">
-        <Button variant="contained" color="primary" size="small" style={{ width: "50%" }}>
-          <Link href="/projects">Add a Project</Link>
-          <ProjectIcon sx={{ padding: "5px" }} fontSize="large" />
-        </Button>
-      </div>
+      <Link href="/projects">
+                  <div className='flex flex-col items-center justify-center p-1'>
+                    <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+                      Add a Project
+                    <ProjectIcon sx={{ padding: "5px" }} fontSize="large" />
+                    </Button>
+                  </div>
+      </Link>
     </div>
   );
 }

@@ -144,7 +144,7 @@ export default function TaskEntriesByMonthChart() {
   }, []);
 
   return (
-    <div className="bg-[#f8f9fa] w-full lg:w-[40%] h-[40vh] p-4 shadow-lg rounded-lg flex flex-col justify-between">
+    <div className="bg-[#f8f9fa] w-full lg:w-[50%] h-[50vh] p-4 shadow-lg rounded-lg flex flex-col justify-between">
       <h2 className="text-xl font-bold text-center mb-3">Task Entries by Month</h2>
 
       {loading 
@@ -171,12 +171,14 @@ export default function TaskEntriesByMonthChart() {
         <p className="text-center text-gray-500">No data available</p>
       )}
 
-      <div className="flex flex-col items-center justify-center p-3">
-        <Button variant="contained" color="primary" size="small" style={{ width: "50%" }}>
-          <Link href="/taskentries">Add a Task Entry</Link>
-          <TaskIcon sx={{ padding: "5px" }} fontSize="large" />
-        </Button>
-      </div>
+        <Link href="/taskentries">
+                  <div className='flex flex-col items-center justify-center p-1'>
+                    <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+                    Add a Task Entry
+                    <TaskIcon sx={{ padding: "5px" }} fontSize="large" />
+                    </Button>
+                  </div>
+        </Link>
     </div>
   );
 }

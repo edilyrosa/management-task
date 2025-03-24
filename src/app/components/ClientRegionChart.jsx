@@ -59,7 +59,7 @@ export default function ClientCountryChart() {
   }, []);
 
   return (
-    <div className="bg-[#f8f9fa] w-full h-[30%] p-2 shadow-lg rounded-lg">
+    <div className="bg-[#f8f9fa] w-full h-[50%] p-2 shadow-lg rounded-lg">
       <h2 className="text-xl font-bold text-center mb-1">Clients by Country</h2>
 
        {loading 
@@ -75,7 +75,7 @@ export default function ClientCountryChart() {
                 <Chart
         chartType="GeoChart"
         width="100%"
-        height="350px"
+        height="400px"
         data={chartData}
         options={{
           region: "world",
@@ -99,12 +99,14 @@ export default function ClientCountryChart() {
         )}
      
      
-      <div className='flex flex-col items-center justify-center p-1'>
-        <Button variant="contained" color="primary" size="small" style={{ width: '20%' }}>
-          <Link href="/clients">Add a Client</Link>
-          <ClientIcon sx={{ padding:'5px' }} fontSize="large" /> 
-        </Button>
-      </div>
+          <Link href="/clients">
+            <div className='flex flex-col items-center justify-center p-1'>
+              <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+                Add a Client
+              <ClientIcon sx={{ padding:'5px' }} fontSize="large" /> 
+              </Button>
+            </div>
+          </Link>
 
       
     </div>
