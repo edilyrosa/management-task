@@ -424,7 +424,7 @@ export default function TaskEntryTable({ taskEntries, onEdit, onDelete, isLoadin
         <TextField fullWidth label="Search Tasks" variant="outlined" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full flex flex-col flex-shrink-0 min-w-0">
         <table className="table w-full text-left text-gray-600 text-xs sm:text-sm">
           <thead className="bg-gray-100">
             <tr>

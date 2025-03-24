@@ -52,13 +52,14 @@ export default function ProjectTable({ projects, onEdit, onDelete, isLoading }) 
     return [project.name, statusText, clientName, project.description]
       .some(value => String(value || '').toLowerCase().includes(searchQuery.toLowerCase()));
   });
+
   return (
     <div className="p-5 w-full px-5 mx-auto relative">
       <div className="mb-4">
         <TextField fullWidth label="Search Projects" variant="outlined" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full flex flex-col items-center flex-shrink-0 min-w-0">
         <table className="table w-full text-left text-gray-600 text-xs sm:text-sm">
           <thead className="bg-gray-100">
             <tr>

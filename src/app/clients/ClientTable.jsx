@@ -35,8 +35,8 @@ export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
         <TextField fullWidth label="Search Clients" variant="outlined" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="table w-full text-left text-gray-600 text-xs sm:text-sm">
+      <div className="w-full flex flex-col flex-shrink-0 min-w-0">
+        <table className="table w-full text-left items-center text-gray-600 text-xs sm:text-sm">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3">Client's Name</th>
