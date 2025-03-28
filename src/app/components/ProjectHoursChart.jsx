@@ -1,93 +1,5 @@
-// 'use client';
-// import Link from 'next/link';
-// import { Button } from "@mui/material";
-// import { useEffect, useState } from "react";
-// import { Chart } from "react-google-charts";
-// import ProjectIcon from '@mui/icons-material/FolderOpen';
-
-// export default function ProjectHoursChart() {
-//   const [chartData, setChartData] = useState([
-//     ["Project", "Hours Worked"]
-//   ]);
-
-//   useEffect(() => {
-//     const fetchTaskEntries = async () => {
-//       try {
-//         const res = await fetch("/api/taskentries");
-//         if (!res.ok) throw new Error("Failed to fetch task entries");
-//         const taskEntries = await res.json();
-
-//         const projectHours = {};
-
-//         taskEntries.forEach(task => {
-//           if (task.project_id && task.duration) {
-//             projectHours[task.project_id] =
-//               (projectHours[task.project_id] || 0) + task.duration;
-//           }
-//         });
-
-//         const projectsRes = await fetch("/api/projects");
-//         if (!projectsRes.ok) throw new Error("Failed to fetch projects");
-//         const projects = await projectsRes.json();
-
-//         const projectNames = Object.fromEntries(
-//           projects.map(p => [p.id, p.name])
-//         );
-
-//         const chartArray = [["Project", "Hours Worked"]];
-//         Object.entries(projectHours).forEach(([projectId, hours]) => {
-//           const projectName = projectNames[projectId] || "Unknown Project";
-//           console.log(`📊 Proyecto: ${projectName}, Horas: ${hours}`);
-//           chartArray.push([projectName, Number(hours)]);
-//         });
-
-//         setChartData(chartArray);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     fetchTaskEntries();
-//   }, []);
-
-//   return (
-//     <div className="bg-[#f8f9fa] w-full h-[30%] p-2 shadow-lg rounded-lg">
-//       <h2 className="text-xl font-bold text-center mb-1">Hours Worked by Project</h2>
-//       <Chart
-//         chartType="BarChart"
-//         width="100%"
-//         height="200px"
-//         data={chartData}
-//         options={{
-//           title: "Total Hours Worked per Project",
-//           chartArea: { width: "70%" },
-//           hAxis: {
-//             title: "Hours Worked",
-//             minValue: 0,
-//           },
-//           vAxis: {
-//             title: "Projects",
-//           },
-//           colors: ["#1565c0"],
-//         }}
-//       />
-//       <div className='flex flex-col items-center justify-center p-1'>
-//         <Button variant="contained" color="primary" size="small" style={{ width: '50%' }}>
-//           <Link href="/projects">Add a Project</Link>
-//           <ProjectIcon sx={{ padding:'5px' }} fontSize="large" /> 
-//         </Button>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
 "use client";
-
+import RotatingText from './RotatingText';
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
@@ -174,7 +86,24 @@ export default function ProjectHoursChart() {
 
   return (
     <div className="bg-[#f8f9fa] w-full lg:w-[50%] h-[50vh] p-4 shadow-lg rounded-lg overflow-hidden flex flex-col justify-between">
-      <h2 className="text-xl font-bold text-center mb-3">Hours Worked by Project</h2>
+   
+        <RotatingText
+                      texts={[
+                        "Hours Worked by Project",
+                        "Click on 'Add a Project' then set it a task",
+                        "and affect this chart!",
+                        "Let's make your project a reality",
+                      ]}
+                      mainClassName="text-base sm:text-lg p-1 mx-auto my-1 w-[80%] h-[5vh] bg-blue-300 rounded-lg justify-center text-white"
+                      staggerFrom="last"
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "-120%" }}
+                      staggerDuration={0.025}
+                      splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                      transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                      rotationInterval={6000}
+                    />
 
       {loading 
       ? 
@@ -212,7 +141,7 @@ export default function ProjectHoursChart() {
 
       <Link href="/projects">
                   <div className='flex flex-col items-center justify-center p-1'>
-                    <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+                    <Button variant="contained" color="primary" size="large" style={{ width: '100%' }}>
                       Add a Project
                     <ProjectIcon sx={{ padding: "5px" }} fontSize="large" />
                     </Button>

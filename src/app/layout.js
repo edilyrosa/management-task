@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       >
         <NavBarApp/>
     
-          <main className="pt-[11vh]">
+          <main className="pt-[13vh] sm:pt-[11vh]">
             {children}
           </main>
 

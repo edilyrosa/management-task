@@ -1,148 +1,106 @@
-// // 'use client';
-// // import { useState, useEffect } from 'react';
-// // import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControlLabel, Switch } from '@mui/material';
-
-// // export default function ProjectForm({ open, onClose, onSave, projectData }) {
-// //   const [formData, setFormData] = useState({
-// //     name: '',
-// //     client_id: '',
-// //     description: '',
-// //     active: true,
-// //   });
-
-// //   useEffect(() => {
-// //     if (projectData) {
-// //       setFormData({
-// //         name: projectData.name || '',
-// //         client_id: projectData.client_id || '',
-// //         description: projectData.description || '',
-// //         active: projectData.active ?? true,
-// //       });
-// //     } else {
-// //       setFormData({
-// //         name: '',
-// //         client_id: '',
-// //         description: '',
-// //         active: true,
-// //       });
-// //     }
-// //   }, [projectData]);
-
-// //   const handleChange = (e) => {
-// //     const { name, value } = e.target;
-// //     setFormData((prev) => ({ ...prev, [name]: value }));
-// //   };
-
-// //   const handleToggleActive = () => {
-// //     setFormData((prev) => ({ ...prev, active: !prev.active }));
-// //   };
-
-// //   const handleSubmit = async (e) => {
-// //     e.preventDefault();
-// //     await onSave(formData);
-// //     onClose(); // Cerrar el modal después de guardar
-// //   };
-
-// //   return (
-// //     <Dialog open={open} onClose={onClose}>
-// //       <DialogTitle>{projectData ? 'Edit Project' : 'New Project'}</DialogTitle>
-// //       <DialogContent>
-// //         <form onSubmit={handleSubmit} className="space-y-4">
-// //           <TextField fullWidth label="Project Name" name="name" value={formData.name} onChange={handleChange} required />
-// //           <TextField fullWidth label="Client ID" name="client_id" value={formData.client_id} onChange={handleChange} required type="number" />
-// //           <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleChange} multiline rows={3} />
-// //           <FormControlLabel control={<Switch checked={formData.active} onChange={handleToggleActive} />} label="Active" />
-// //         </form>
-// //       </DialogContent>
-// //       <DialogActions>
-// //         <Button onClick={onClose} color="primary" variant="outlined">
-// //           Cancel
-// //         </Button>
-// //         <Button onClick={handleSubmit} color="primary" variant="contained">
-// //           Save
-// //         </Button>
-// //       </DialogActions>
-// //     </Dialog>
-// //   );
-// // }
 
 
 // 'use client';
 
 // import { useState, useEffect } from 'react';
-// import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControlLabel, Switch, CircularProgress } from '@mui/material';
+// import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from '@mui/material';
 
 // export default function ProjectForm({ open, onClose, onSave, projectData }) {
 //   const [formData, setFormData] = useState({
+//     id: null,
 //     name: '',
 //     client_id: '',
 //     description: '',
 //     active: true,
 //   });
-//   const [loading, setLoading] = useState(false);
+
+//   const [clients, setClients] = useState([]); // Lista de clientes
 
 //   useEffect(() => {
 //     if (projectData) {
-//       setFormData({
-//         name: projectData.name || '',
-//         client_id: projectData.client_id || '',
-//         description: projectData.description || '',
-//         active: projectData.active ?? true,
-//       });
+//       setFormData(projectData);
 //     } else {
 //       setFormData({
+//         id: null,
 //         name: '',
 //         client_id: '',
 //         description: '',
 //         active: true,
 //       });
 //     }
-//     setLoading(false); // 🔥 Reseteamos el loading al abrir
-//   }, [projectData, open]);
+//   }, [projectData]);
+
+//   // 🚀 Obtener clientes desde la API al abrir el formulario
+//   useEffect(() => {
+//     const fetchClients = async () => {
+//       try {
+//         const res = await fetch('/api/clients');
+//         if (!res.ok) throw new Error('Failed to fetch clients');
+//         const data = await res.json();
+//         setClients(data); // Guardamos los clientes en el estado
+//       } catch (error) {
+//         console.error('Error fetching clients:', error);
+//       }
+//     };
+
+//     if (open) fetchClients(); // Solo se ejecuta cuando el modal está abierto
+//   }, [open]);
 
 //   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({ ...prev, [name]: value }));
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
 //   };
 
-//   const handleToggleActive = () => {
-//     setFormData((prev) => ({ ...prev, active: !prev.active }));
+//   const handleStatusChange = (e) => {
+//     setFormData({ ...formData, active: e.target.value === 'true' });
 //   };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoading(true); // 🔥 Activamos el loading inmediatamente
-//     onClose(); // 🔥 Cerramos el modal inmediatamente
-//     await onSave(formData); // 🔥 Guardamos en la API
+//   const handleSubmit = () => {
+//     onSave(formData);
+//     onClose();
 //   };
 
 //   return (
-//     <Dialog open={open} onClose={!loading ? onClose : null}>
-//       <DialogTitle>{projectData ? 'Edit Project' : 'New Project'}</DialogTitle>
+//     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+//       <DialogTitle>{formData.id ? 'Edit Project' : 'Add New Project'}</DialogTitle>
 //       <DialogContent>
-//         <form onSubmit={handleSubmit} className="space-y-8">
-//           <TextField fullWidth label="Project Name" name="name" value={formData.name} onChange={handleChange} required />
-//           <TextField fullWidth label="Client ID" name="client_id" value={formData.client_id} onChange={handleChange} required type="number" />
-//           <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleChange} multiline rows={3} />
-//           <FormControlLabel control={<Switch checked={formData.active} onChange={handleToggleActive} />} label="Active" />
-//         </form>
+//         <TextField fullWidth label="Project Name" name="name" value={formData.name} onChange={handleChange} margin="dense" required />
+//         <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleChange} margin="dense" multiline rows={3} />
+
+//         {/* 🚀 Select para Clientes */}
+//         <FormControl fullWidth margin="dense">
+//           <FormLabel>Client</FormLabel>
+//           <Select name="client_id" value={formData.client_id} onChange={handleChange} required>
+//             {clients.map((client) => (
+//               <MenuItem key={client.id} value={client.id}>
+//                 {client.name} - {client.id}
+//               </MenuItem>
+//             ))}
+//           </Select>
+//         </FormControl>
+
+//         {/* Status (Activo / Inactivo) */}
+//         <FormControl margin="dense">
+//           <FormLabel>Status</FormLabel>
+//           <RadioGroup row name="active" value={String(formData.active)} onChange={handleStatusChange}>
+//             <FormControlLabel value="true" control={<Radio />} label="Active" />
+//             <FormControlLabel value="false" control={<Radio />} label="Inactive" />
+//           </RadioGroup>
+//         </FormControl>
 //       </DialogContent>
 //       <DialogActions>
-//         <Button onClick={onClose} color="primary" variant="outlined" disabled={loading}>
-//           Cancel
-//         </Button>
-//         <Button type="submit" onClick={handleSubmit} color="primary" variant="contained" disabled={loading}>
-//           {loading ? <CircularProgress size={20} style={{ color: 'white' }} /> : 'Save'}
-//         </Button>
+//         <Button onClick={onClose} color="secondary">Cancel</Button>
+//         <Button onClick={handleSubmit} color="primary">{formData.id ? 'Update' : 'Save'}</Button>
 //       </DialogActions>
 //     </Dialog>
 //   );
 // }
 
+
+
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem, CircularProgress } from '@mui/material';
 
 export default function ProjectForm({ open, onClose, onSave, projectData }) {
   const [formData, setFormData] = useState({
@@ -152,8 +110,9 @@ export default function ProjectForm({ open, onClose, onSave, projectData }) {
     description: '',
     active: true,
   });
-
-  const [clients, setClients] = useState([]); // Lista de clientes
+  const [clients, setClients] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (projectData) {
@@ -167,57 +126,116 @@ export default function ProjectForm({ open, onClose, onSave, projectData }) {
         active: true,
       });
     }
+    setErrors({});
   }, [projectData]);
 
-  // 🚀 Obtener clientes desde la API al abrir el formulario
   useEffect(() => {
     const fetchClients = async () => {
+      if (!open) return;
       try {
         const res = await fetch('/api/clients');
         if (!res.ok) throw new Error('Failed to fetch clients');
         const data = await res.json();
-        setClients(data); // Guardamos los clientes en el estado
+        setClients(data);
       } catch (error) {
         console.error('Error fetching clients:', error);
+        setErrors(prev => ({ ...prev, clients: 'Failed to load clients. Please try again.' }));
       }
     };
 
-    if (open) fetchClients(); // Solo se ejecuta cuando el modal está abierto
+    fetchClients();
   }, [open]);
 
+  const validateInput = (name, value) => {
+    if (!value || !value.toString().trim()) {
+      setErrors(prev => ({ ...prev, [name]: 'This field is required' }));
+      return false;
+    }
+    setErrors(prev => ({ ...prev, [name]: '' }));
+    return true;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    validateInput(name, value);
   };
 
   const handleStatusChange = (e) => {
-    setFormData({ ...formData, active: e.target.value === 'true' });
+    setFormData(prev => ({ ...prev, active: e.target.value === 'true' }));
   };
 
-  const handleSubmit = () => {
-    onSave(formData);
-    onClose();
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const newErrors = {};
+    ['name', 'client_id'].forEach(field => {
+      if (!validateInput(field, formData[field])) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await onSave(formData);
+      onClose();
+    } catch (error) {
+      console.error("Error saving project:", error);
+      setErrors(prev => ({ ...prev, submit: 'Error saving project. Please try again.' }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{formData.id ? 'Edit Project' : 'Add New Project'}</DialogTitle>
       <DialogContent>
-        <TextField fullWidth label="Project Name" name="name" value={formData.name} onChange={handleChange} margin="dense" required />
-        <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleChange} margin="dense" multiline rows={3} />
+        <TextField 
+          fullWidth 
+          label="Project Name" 
+          name="name" 
+          value={formData.name} 
+          onChange={handleChange} 
+          margin="dense" 
+          required
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField 
+          fullWidth 
+          label="Description" 
+          name="description" 
+          value={formData.description} 
+          onChange={handleChange} 
+          margin="dense" 
+          multiline 
+          rows={3}
+        />
 
-        {/* 🚀 Select para Clientes */}
-        <FormControl fullWidth margin="dense">
+        <FormControl fullWidth margin="dense" error={!!errors.client_id}>
           <FormLabel>Client</FormLabel>
-          <Select name="client_id" value={formData.client_id} onChange={handleChange} required>
+          <Select 
+            name="client_id" 
+            value={formData.client_id} 
+            onChange={handleChange} 
+            required
+          >
             {clients.map((client) => (
               <MenuItem key={client.id} value={client.id}>
                 {client.name} - {client.id}
               </MenuItem>
             ))}
           </Select>
+          {errors.client_id && <span style={{ color: 'red', fontSize: '0.75rem' }}>{errors.client_id}</span>}
         </FormControl>
 
-        {/* Status (Activo / Inactivo) */}
         <FormControl margin="dense">
           <FormLabel>Status</FormLabel>
           <RadioGroup row name="active" value={String(formData.active)} onChange={handleStatusChange}>
@@ -225,10 +243,20 @@ export default function ProjectForm({ open, onClose, onSave, projectData }) {
             <FormControlLabel value="false" control={<Radio />} label="Inactive" />
           </RadioGroup>
         </FormControl>
+
+        {errors.submit && (
+          <p style={{ color: 'red', marginTop: '10px' }}>{errors.submit}</p>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">{formData.id ? 'Update' : 'Save'}</Button>
+        <Button onClick={onClose} color="secondary" disabled={isSubmitting}>Cancel</Button>
+        <Button 
+          onClick={handleSubmit} 
+          color="primary" 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? <CircularProgress size={24} /> : (formData.id ? 'Update' : 'Save')}
+        </Button>
       </DialogActions>
     </Dialog>
   );

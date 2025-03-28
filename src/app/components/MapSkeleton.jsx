@@ -2,12 +2,12 @@ import React from "react";
 import ContentLoader from "react-content-loader";
 
 const CategorySkeleton = (props) => (
-  <div className="flex flex-col items-center justify-center w-full">
+  <div className="flex flex-col items-center justify-center w-full  ">
     <ContentLoader
       speed={2}
       width="100%"
       height="50vh"
-      viewBox="0 0 700 300"
+      viewBox="0 0 500 400"
       backgroundColor="#f3e7e7"
       foregroundColor="#c7cdea"
       {...props}

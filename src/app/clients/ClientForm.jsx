@@ -1,82 +1,10 @@
-
-// 'use client';
-
-// import { useState, useEffect } from 'react';
-// import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-
-// export default function ClientForm({ open, onClose, onSave, clientData }) {
-//   const [formData, setFormData] = useState({
-//     id: null,
-//     name: '',
-//     city: '',
-//     state: '',
-//     country: '',
-//     industry_codes: '',
-//     active: true, // Status por defecto: Activo
-//   });
-
-//   useEffect(() => {
-//     if (clientData) {
-//       setFormData(clientData); // Si es edición, cargar los datos del cliente
-//     } else {
-//       setFormData({
-//         id: null,
-//         name: '',
-//         city: '',
-//         state: '',
-//         country: '',
-//         industry_codes: '',
-//         active: true,
-//       });
-//     }
-//   }, [clientData]);
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleStatusChange = (e) => {
-//     setFormData({ ...formData, active: e.target.value === 'true' }); // Convertir string a boolean
-//   };
-
-//   const handleSubmit = () => {
-//     onSave(formData); // Enviar los datos
-//     onClose(); // Cerrar el modal
-//   };
-
-//   return (
-//     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-//       <DialogTitle>{formData.id ? 'Edit Client' : 'Add New Client'}</DialogTitle>
-//       <DialogContent>
-//         <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleChange} margin="dense" />
-//         <TextField fullWidth label="City" name="city" value={formData.city} onChange={handleChange} margin="dense" />
-//         <TextField fullWidth label="State" name="state" value={formData.state} onChange={handleChange} margin="dense" />
-//         <TextField fullWidth label="Country" name="country" value={formData.country} onChange={handleChange} margin="dense" />
-//         <TextField fullWidth label="Industry Code" name="industry_codes" value={formData.industry_codes} onChange={handleChange} margin="dense" />
-
-//         {/* Status (Activo / Inactivo) */}
-//         <FormControl margin="dense">
-//           <FormLabel>Status</FormLabel>
-//           <RadioGroup row name="active" value={String(formData.active)} onChange={handleStatusChange}>
-//             <FormControlLabel value="true" control={<Radio />} label="Active" />
-//             <FormControlLabel value="false" control={<Radio />} label="Inactive" />
-//           </RadioGroup>
-//         </FormControl>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button onClick={onClose} color="secondary">Cancel</Button>
-//         <Button onClick={handleSubmit} color="primary">{formData.id ? 'Update' : 'Save'}</Button>
-//       </DialogActions>
-//     </Dialog>
-//   );
-// }
-
-
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import  CountrySelect from '../components/Select'; // ✅ Importamos el nuevo Select
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, CircularProgress } from '@mui/material';
+import CountrySelect from '../components/Select';
+
+const forbiddenChars = /[<>\"'();={}\[\]%]/g;
 
 export default function ClientForm({ open, onClose, onSave, clientData }) {
   const [formData, setFormData] = useState({
@@ -86,12 +14,14 @@ export default function ClientForm({ open, onClose, onSave, clientData }) {
     state: '',
     country: '',
     industry_codes: '',
-    active: true, // Status por defecto: Activo
+    active: true,
   });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (clientData) {
-      setFormData(clientData); // Si es edición, cargar los datos del cliente
+      setFormData(clientData);
     } else {
       setFormData({
         id: null,
@@ -103,39 +33,112 @@ export default function ClientForm({ open, onClose, onSave, clientData }) {
         active: true,
       });
     }
+    setErrors({});
   }, [clientData]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const validateInput = (name, value) => {
+    if (!value || !value.toString().trim()) {
+      setErrors(prev => ({ ...prev, [name]: '⚠️ This field is required' }));
+      return value;
+    }
+    if (forbiddenChars.test(value)) {
+      setErrors(prev => ({ ...prev, [name]: '⚠️ Special characters not allowed' }));
+      return value.replace(forbiddenChars, '');
+    } else {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+      return value;
+    }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: validateInput(name, value) }));
+  };
 
   const handleCountryChange = (event) => {
-    setFormData({ ...formData, country: event.target.value }); // ✅ Envía solo el string del país
+    setFormData(prev => ({ ...prev, country: event.target.value }));
   };
 
   const handleStatusChange = (e) => {
-    setFormData({ ...formData, active: e.target.value === 'true' }); // Convertir string a boolean
+    setFormData(prev => ({ ...prev, active: e.target.value === 'true' }));
   };
 
-  const handleSubmit = () => {
-    onSave(formData); // Enviar los datos
-    onClose(); // Cerrar el modal
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const newErrors = {};
+    Object.entries(formData).forEach(([field, value]) => {
+      if (field !== 'id' && field !== 'active' && (!value || !value.toString().trim())) {
+        newErrors[field] = '⚠️ This field is required';
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await onSave(formData);
+      onClose();
+    } catch (error) {
+      console.error("Error saving:", error);
+      setErrors(prev => ({ ...prev, submit: 'Error saving. Please try again.' }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{formData.id ? 'Edit Client' : 'Add New Client'}</DialogTitle>
       <DialogContent>
-        <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleChange} margin="dense" />
-        <TextField fullWidth label="City" name="city" value={formData.city} onChange={handleChange} margin="dense" />
-        <TextField fullWidth label="State" name="state" value={formData.state} onChange={handleChange} margin="dense" />
+        <TextField 
+          fullWidth 
+          label="Name" 
+          name="name" 
+          value={formData.name} 
+          onChange={handleChange} 
+          margin="dense"
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField 
+          fullWidth 
+          label="City" 
+          name="city" 
+          value={formData.city} 
+          onChange={handleChange} 
+          margin="dense"
+          error={!!errors.city}
+          helperText={errors.city}
+        />
+        <TextField 
+          fullWidth 
+          label="State" 
+          name="state" 
+          value={formData.state} 
+          onChange={handleChange} 
+          margin="dense"
+          error={!!errors.state}
+          helperText={errors.state}
+        />
         
         <CountrySelect value={formData.country} onChange={handleCountryChange} />
 
-        <TextField fullWidth label="Industry Code" name="industry_codes" value={formData.industry_codes} onChange={handleChange} margin="dense" />
+        <TextField 
+          fullWidth 
+          label="Industry Code" 
+          name="industry_codes" 
+          value={formData.industry_codes} 
+          onChange={handleChange} 
+          margin="dense"
+          error={!!errors.industry_codes}
+          helperText={errors.industry_codes}
+        />
 
-        {/* Status (Activo / Inactivo) */}
         <FormControl margin="dense">
           <FormLabel>Status</FormLabel>
           <RadioGroup row name="active" value={String(formData.active)} onChange={handleStatusChange}>
@@ -143,10 +146,20 @@ export default function ClientForm({ open, onClose, onSave, clientData }) {
             <FormControlLabel value="false" control={<Radio />} label="Inactive" />
           </RadioGroup>
         </FormControl>
+
+        {errors.submit && (
+          <p style={{ color: 'red', marginTop: '10px' }}>{errors.submit}</p>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">{formData.id ? 'Update' : 'Save'}</Button>
+        <Button onClick={onClose} color="secondary" disabled={isSubmitting}>Cancel</Button>
+        <Button 
+          onClick={handleSubmit} 
+          color="primary" 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? <CircularProgress size={24} /> : (formData.id ? 'Update' : 'Save')}
+        </Button>
       </DialogActions>
     </Dialog>
   );

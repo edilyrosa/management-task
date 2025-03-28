@@ -1,5 +1,6 @@
 
 'use client';
+import RotatingText from './RotatingText';
 import Link from 'next/link';
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -59,8 +60,25 @@ export default function ClientCountryChart() {
   }, []);
 
   return (
-    <div className="bg-[#f8f9fa] w-full h-[50%] p-2 shadow-lg rounded-lg">
-      <h2 className="text-xl font-bold text-center mb-1">Clients by Country</h2>
+    <div className="bg-[#f8f9fa] w-full h-[50%] p-2 shadow-lg rounded-lg m-auto">
+      <RotatingText
+          texts={[
+            "Clients by Country",
+            "Click on 'Add a Client' and affect this chart",
+            "Explore our global reach",
+            "Join our diverse client base",
+          ]}
+          mainClassName="text-base sm:text-lg p-1 mx-auto my-1 w-[60%] sm:w-[40%] h-[5vh] bg-cyan-400 rounded-lg justify-center text-white"
+          staggerFrom="last"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-120%" }}
+          staggerDuration={0.025}
+          splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+          transition={{ type: "spring", damping: 30, stiffness: 400 }}
+          rotationInterval={6000}
+        />
+      
 
        {loading 
             ? 
@@ -101,7 +119,7 @@ export default function ClientCountryChart() {
      
           <Link href="/clients">
             <div className='flex flex-col items-center justify-center p-1'>
-              <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+              <Button variant="contained" color="primary" size="large" style={{ width: '80%' }}>
                 Add a Client
               <ClientIcon sx={{ padding:'5px' }} fontSize="large" /> 
               </Button>

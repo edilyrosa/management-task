@@ -5,6 +5,7 @@ import { CircularProgress, TextField, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DetailCard from '../components/DetailCard';
+import TableSkeleton from '../components/TableSkeleton';
 export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
   const [hoveredClient, setHoveredClient] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,9 +13,7 @@ export default function ClientTable({ clients, onEdit, onDelete, isLoading }) {
 
   if (isLoading || !clients) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <CircularProgress size={80} style={{ color: '#d32f2f' }} />
-      </div>
+      <TableSkeleton/>
     );
   }
 

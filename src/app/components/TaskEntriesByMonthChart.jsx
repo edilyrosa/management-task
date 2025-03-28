@@ -1,83 +1,7 @@
-// 'use client';
-// import Link from 'next/link';
-// import { Button } from "@mui/material";
-// import { useEffect, useState } from "react";
-// import { Chart } from "react-google-charts";
-// import TaskIcon from '@mui/icons-material/AssignmentTurnedIn';
 
-// export default function TaskEntriesByMonthChart() {
-//   const [chartData, setChartData] = useState([
-//     ["Month", "Task Entries"]
-//   ]);
-
-//   useEffect(() => {
-//     const fetchTaskEntries = async () => {
-//       try {
-//         const res = await fetch("/api/taskentries");
-//         if (!res.ok) throw new Error("Failed to fetch task entries");
-//         const taskEntries = await res.json();
-
-//         const monthCounts = {};
-//         taskEntries.forEach(task => {
-//           if (task.date) {
-//             const date = new Date(task.date);
-//             const monthYear = `${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`;
-//             monthCounts[monthYear] = (monthCounts[monthYear] || 0) + 1;
-//           }
-//         });
-
-//         const chartArray = [["Month", "Task Entries"]];
-//         Object.entries(monthCounts)
-//           .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-//           .forEach(([month, count]) => {
-//             chartArray.push([month, count]);
-//           });
-
-//         setChartData(chartArray);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     fetchTaskEntries();
-//   }, []);
-
-//   return (
-//     <div className="bg-[#f8f9fa] w-[50%] h-[50vh] p-2 shadow-lg rounded-lg">
- 
-//       <h2 className="text-xl font-bold text-center mb-1">CTask Entries by Month</h2>
-//       <Chart
-//         chartType="LineChart"
-//         width="100%"
-//         height="200px"
-//         data={chartData}
-//         options={{
-//           title: "Task Entries per Month",
-//           chartArea: { width: "70%" },
-//           hAxis: {
-//             title: "Month",
-//           },
-//           vAxis: {
-//             title: "Number of Task Entries",
-//             minValue: 0,
-//           },
-//           colors: ["#1e88e5"],
-//           curveType: "function",
-//           legend: { position: "bottom" },
-//         }}
-//       />
-//        <div className='flex flex-col items-center justify-center p-1'>
-//               <Button variant="contained" color="primary" size="small" style={{ width: '50%' }}>
-//                 <Link href="/taskentries">Add a Taskentry</Link>
-//                <TaskIcon sx={{ padding:'5px' }} fontSize="large" /> 
-//               </Button>
-//          </div>
-//     </div>
-//   );
-// }
 
 "use client";
-
+import RotatingText from './RotatingText';
 import { useEffect, useState } from "react";
 import { PolarArea } from "react-chartjs-2";
 import { Chart as ChartJS, RadialLinearScale, ArcElement, Tooltip, Legend } from "chart.js";
@@ -145,7 +69,24 @@ export default function TaskEntriesByMonthChart() {
 
   return (
     <div className="bg-[#f8f9fa] w-full lg:w-[50%] h-[50vh] p-4 shadow-lg rounded-lg flex flex-col justify-between">
-      <h2 className="text-xl font-bold text-center mb-3">Task Entries by Month</h2>
+
+        <RotatingText
+                texts={[
+                  "Task Entries by Month",
+                  "Click on 'Add a task' and affect this chart",
+                  "Explore our task trends",
+                  "Join our task management journey",
+                ]}
+                mainClassName="text-base sm:text-lg p-1 mx-auto my-1 w-[80%] h-[5vh] bg-pink-300 rounded-lg justify-center text-white"
+                staggerFrom="last"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={6000}
+              />
 
       {loading 
       ? (
@@ -173,7 +114,7 @@ export default function TaskEntriesByMonthChart() {
 
         <Link href="/taskentries">
                   <div className='flex flex-col items-center justify-center p-1'>
-                    <Button variant="contained" color="primary" size="large" style={{ width: '50%' }}>
+                    <Button variant="contained" color="primary" size="large" style={{ width: '100%' }}>
                     Add a Task Entry
                     <TaskIcon sx={{ padding: "5px" }} fontSize="large" />
                     </Button>

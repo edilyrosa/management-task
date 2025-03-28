@@ -7,6 +7,7 @@ import { CircularProgress, TextField, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DetailCard from '../components/DetailCard'; // 🔥 Importamos DetailCard
+import TableSkeleton from '../components/TableSkeleton';
 
 export default function ProjectTable({ projects, onEdit, onDelete, isLoading }) {
   const [clientsMap, setClientsMap] = useState({});
@@ -35,9 +36,10 @@ export default function ProjectTable({ projects, onEdit, onDelete, isLoading }) 
 
   if (isLoading || !projects) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <CircularProgress size={80} style={{ color: '#d32f2f' }} />
-      </div>
+      // <div className="flex justify-center items-center h-64">
+      //   <CircularProgress size={80} style={{ color: '#d32f2f' }} />
+      // </div>
+      <TableSkeleton/>
     );
   }
 

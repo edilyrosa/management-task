@@ -4,8 +4,8 @@ import ContentLoader from "react-content-loader";
 const TableSkeleton = (props) => (
   <ContentLoader
     speed={2}
-    width="100%"
-    height="50vh"
+    width="80%"
+    height="80%"
     viewBox="0 0 1000 550"
     backgroundColor="#f3e7e7"
     foregroundColor="#c7cdea"

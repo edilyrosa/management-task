@@ -336,6 +336,7 @@ import { CircularProgress, TextField, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DetailCard from '../components/DetailCard';
+import TableSkeleton from '../components/TableSkeleton';
 
 export default function TaskEntryTable({ taskEntries, onEdit, onDelete, isLoading }) {
   const [contractorsMap, setContractorsMap] = useState({});
@@ -389,21 +390,16 @@ export default function TaskEntryTable({ taskEntries, onEdit, onDelete, isLoadin
 
   if (isLoading || !taskEntries) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <CircularProgress size={80} style={{ color: '#d32f2f' }} />
-      </div>
+      // <div className="flex justify-center items-center h-64">
+      //   <CircularProgress size={80} style={{ color: '#d32f2f' }} />
+      // </div>
+      <TableSkeleton/>
     );
   }
 
   if (taskEntries.length === 0) {
     return <p className="text-gray-600 text-center mt-4">No task entries found.</p>;
   }
-
-  // const filteredTasks = taskEntries.filter((task) =>
-  //   Object.values(task).some(
-  //     (value) => typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
-  //   )
-  // );
 
   const filteredTasks = taskEntries.filter((task) =>
     Object.values({
