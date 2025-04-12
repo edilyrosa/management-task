@@ -381,7 +381,7 @@ export default function ClientRegionChart() {
       <Link href="/clients">
         <div className='flex flex-col items-center justify-center p-1'>
           <Button variant="contained" color="primary" size="large" style={{ width: '80%' }}>
-            Add a Client
+            CRUD ON Client
             <ClientIcon sx={{ padding: '5px' }} fontSize="large" />
           </Button>
         </div>

@@ -7,21 +7,9 @@ const ClientContext = createContext();
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-// export const ClientProvider = ({ children }) => {
-//   const { data: clients, error, mutate } = useSWR('/api/clients', fetcher);
-
-//   return (
-//     <ClientContext.Provider value={{ clients, mutate }}>
-//       {children}
-//     </ClientContext.Provider>
-//   );
-// };
-
-// context/ClientContext.js
 
 export const ClientProvider = ({ children }) => {
   
-  //const { data: clients, error, mutate } = useSWR('/api/clients', fetcher);
   const { data: clients, error, mutate } = useSWR('/api/clients', fetcher, {
     refreshInterval: 5000, // cada 5 segundos
   });

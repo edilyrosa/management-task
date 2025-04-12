@@ -2,6 +2,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBarApp from "./components/NavBarApp";
 import { ClientProvider } from "../context/ClientContext";
+import { ProjectProvider } from '../context/ProjectContext';
+import { TaskEntryProvider } from '../context/TaskEntryContext';
+import { ContractorProvider } from "../context/ContractorContext";
+import { CategoryProvider } from "../context/CategoryContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,21 +25,23 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      
-      <ClientProvider>
 
-     
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <NavBarApp/>
-    
-          <main className="pt-[13vh] sm:pt-[11vh]">
-            {children}
-          </main>
-
-      </body> 
-      </ClientProvider>
+    <TaskEntryProvider>
+        <ProjectProvider>
+          <ClientProvider>
+            <ContractorProvider>
+              <CategoryProvider>
+                <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                  <NavBarApp/>
+                    <main className="pt-[13vh] sm:pt-[11vh]">
+                      {children}
+                      </main>
+                </body> 
+              </CategoryProvider>
+            </ContractorProvider>
+          </ClientProvider>
+        </ProjectProvider>
+      </TaskEntryProvider>
     </html>
   );
 }
