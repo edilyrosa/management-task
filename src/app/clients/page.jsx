@@ -87,9 +87,10 @@ import DeleteConfirmModal from '../components/DeleteConfirmModal'; // ✅ Usamos
 import { useClients } from '../../context/ClientContext';
 
 export default function ClientsList() {
-  const { clients, mutate } = useClients();
+  //const { clients, mutate } = useClients();
+  const { clients, saveClient, deleteClient } = useClients();
   const [isFormOpen, setIsFormOpen] = useState(false);
-    const [editingClient, setEditingClient] = useState(null);
+  const [editingClient, setEditingClient] = useState(null);
   const [deleteClientId, setDeleteClientId] = useState(null);
   const [deleteClientName, setDeleteClientName] = useState('');
 
@@ -102,36 +103,53 @@ export default function ClientsList() {
     setIsFormOpen(true);
   };
 
-  const handleSave = async (clientData) => {
-    const method = clientData.id ? 'PUT' : 'POST';
-    const endpoint = clientData.id ? `/api/clients/${clientData.id}` : `/api/clients`;
+  // const handleSave = async (clientData) => {
+  //   const method = clientData.id ? 'PUT' : 'POST';
+  //   const endpoint = clientData.id ? `/api/clients/${clientData.id}` : `/api/clients`;
 
-    await fetch(endpoint, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(clientData),
-    });
+  //   await fetch(endpoint, {
+  //     method,
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(clientData),
+  //   });
 
-    await mutate(); // 🔥 Forzar actualización inmediata
-  };
+  //   await mutate(); // 🔥 Forzar actualización inmediata
+  // };
+
+  // const handleDelete = async () => {
+  //   if (!deleteClientId) return;
+
+  //   const res = await fetch(`/api/clients/${deleteClientId}`, { method: 'DELETE' });
+
+  //   if (res.ok) {
+  //     await mutate(); // 🔥 Forzar actualización inmediata
+  //   }
+
+  //   setDeleteClientId(null); // 🔥 Cerrar el modal después de eliminar
+  //   setDeleteClientName('');
+  // };
 
   const confirmDelete = (id, name) => {
     setDeleteClientId(id);
     setDeleteClientName(name);
   };
 
+ 
+
+
+
+
+  const handleSave = async (clientData) => {
+    await saveClient(clientData);
+    setIsFormOpen(false);
+  };
+  
   const handleDelete = async () => {
-    if (!deleteClientId) return;
-
-    const res = await fetch(`/api/clients/${deleteClientId}`, { method: 'DELETE' });
-
-    if (res.ok) {
-      await mutate(); // 🔥 Forzar actualización inmediata
-    }
-
-    setDeleteClientId(null); // 🔥 Cerrar el modal después de eliminar
+    await deleteClient(deleteClientId);
+    setDeleteClientId(null);
     setDeleteClientName('');
   };
+
 
   return (
     <div className='flex flex-col items-center justify-center p-4'>
