@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Project Description
+
+This project is a web application for managing clients, projects, and task entries. It allows users to create, edit, and delete clients and projects, as well as track time spent on tasks within each project.
+
+## Main Libraries/Frameworks Used
+
+- [Next.js](https://nextjs.org): React framework for building web applications.
+- [React](https://react.dev/): JavaScript library for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework.
+
 ## Getting Started
 
 First, run the development server:
